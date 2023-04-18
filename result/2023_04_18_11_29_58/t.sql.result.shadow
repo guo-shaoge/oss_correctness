@@ -1,0 +1,6 @@
+succeed: end time: 2023-04-18 11:30:08.380445246 +0800 CST m=+9.560605597, duration: 2.927026436s
+
+"id","query_name","digest_text","executed_at"
+"1059533","events-total","SELECT COUNT(1) AS cnt, MAX(created_at) AS latest_created_at, UNIX_TIMESTAMP(MAX(created_at)) AS latest_timestamp FROM github_events; ","2022-11-09 03:44:22"
+"1059534","events-total","SELECT COUNT(1) AS cnt, MAX(created_at) AS latest_created_at, UNIX_TIMESTAMP(MAX(created_at)) AS latest_timestamp FROM github_events; ","2022-11-09 03:45:08"
+"1088602","events-total","SELECT COUNT(1) AS cnt, MAX(created_at) AS latest_created_at, UNIX_TIMESTAMP(MAX(created_at)) AS latest_timestamp FROM github_events; ","2022-11-09 07:40:13"
