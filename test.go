@@ -34,9 +34,4 @@ func main() {
 	if err := cmd.Wait(); err != nil {
 		log.Fatal(err)
 	}
-
-	err = os.Mkdir("subdir", 0755)
-	if err != nil {
-		panic(err)
-	}
 }
