@@ -28,6 +28,7 @@ func main() {
 
 	comparedSQL := make(map[string]bool)
 	var fnCnt int
+	duras := make(map[string][]string)
 	for _, fileInfo := range fileInfos {
 		if fileInfo.IsDir() {
 			log.Printf("got %s, which is not result file", fileInfo)
@@ -71,6 +72,7 @@ func main() {
 		}
 		// ignore first line
 		same := true
+		duras[fnNoExt] = []string{getDuration(shadowLines[0]), getDuration(prodLines[0])}
 		for i := 1; i < len(shadowLines); i++ {
 			if shadowLines[i] != prodLines[i] {
 				same = false
@@ -82,4 +84,16 @@ func main() {
 			fmt.Printf("vimdiff %s %s\n", fnNoExt + prodFnSuffix, fnNoExt + shadowFnSuffix)
 		}
 	}
+
+	fmt.Println()
+	fmt.Println()
+	fmt.Printf("| %-70s | %-20v | %-20v \n", "sql fn", "shadow", "prod")
+	for k, v := range duras {
+		fmt.Printf("| %-70s | %-20v | %-20v |\n", k, v[0], v[1])
+	}
+}
+
+func getDuration(line string) string {
+	s := strings.Split(line, " ")
+	return s[len(s)-1]
 }

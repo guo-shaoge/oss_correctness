@@ -19,5 +19,5 @@ FROM star_companies, summary
 WHERE
     length(company_name) != 0
     AND company_name NOT IN ('-', 'none', 'no', 'home', 'n/a', 'null', 'unknown')
-ORDER BY stargazers DESC
+ORDER BY stargazers DESC, company_name, proportion
 LIMIT 9999999999;

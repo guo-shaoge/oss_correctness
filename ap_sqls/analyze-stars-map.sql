@@ -14,7 +14,7 @@ WITH group_by_area AS (
         AND gu.country_code != 'N/A'
         AND gu.country_code != 'UND'
     GROUP BY country_or_area
-    ORDER BY cnt DESC
+    ORDER BY cnt DESC, country_or_area
 ), summary AS (
     SELECT SUM(cnt) AS total FROM group_by_area
 )

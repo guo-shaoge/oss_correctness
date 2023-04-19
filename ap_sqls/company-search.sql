@@ -10,5 +10,5 @@ SELECT
     SUM(cnt) AS total
 FROM company_ci
 GROUP BY `name`
-ORDER BY total DESC
+ORDER BY total DESC, name
 LIMIT 10

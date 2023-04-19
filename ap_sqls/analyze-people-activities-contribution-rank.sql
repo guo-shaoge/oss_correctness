@@ -36,7 +36,7 @@ WITH activity_contribution_last_month AS (
     SELECT COALESCE(SUM(events), 0) AS total FROM activity_contribution_last_month
 )
 SELECT
-    ROW_NUMBER() OVER (ORDER BY lm.events DESC) AS row_num,
+    ROW_NUMBER() OVER (ORDER BY lm.events DESC, lm.actor_login) AS row_num,
     lm.actor_login,
     lm.events AS last_month_events,
     COALESCE(l2m.events, 0) AS last_2nd_month_events,

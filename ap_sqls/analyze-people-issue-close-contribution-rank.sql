@@ -22,7 +22,7 @@ WITH issue_contribution_last_month AS (
     GROUP BY actor_id
 )
 SELECT
-    ROW_NUMBER() OVER (ORDER BY lm.closes DESC) AS row_num,
+    ROW_NUMBER() OVER (ORDER BY lm.closes DESC, lm.actor_login) AS row_num,
     lm.actor_id,
     lm.actor_login,
     lm.closes AS last_month_events,

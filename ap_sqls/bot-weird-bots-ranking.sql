@@ -1,5 +1,5 @@
 SELECT 
-    actor_id, ANY_VALUE(actor_login) AS actor_login, COUNT(*) AS contributions
+    actor_id, MIN(actor_login) AS actor_login, COUNT(*) AS contributions
 FROM github_events ge
 WHERE
     type = 'PushEvent'

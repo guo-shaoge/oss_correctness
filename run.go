@@ -11,27 +11,32 @@ import (
 	"log"
 )
 
-func runSQL(fromDir string, sqlFiles []string, resDir string, resFnSuffix string,
-	user, host, port, passwd string) error {
+func runSQL(fromDir string, sqlFiles []string, resDir string, resFnSuffixs []string,
+	users, passwds []string) error {
 	for i, sqlFn := range sqlFiles {
 		sql := fmt.Sprintf("source %s;", path.Join(fromDir, sqlFn))
-		logfile := path.Join(resDir, sqlFn + ".result" + resFnSuffix)
 
-		start := time.Now()
-		log.Printf("\n\nstart time: %v, iter: %v, sqlFn: %v, user: %s\n", start, i, sqlFn, user)
+		for j := 0; j < 2; j++ {
+			logfile := path.Join(resDir, sqlFn + ".result" + resFnSuffixs[j])
+			user := users[j]
+			passwd := passwds[j]
 
-		out, err := exec.Command("mycli", "-u", user, "-h", host, "-P", port, "-D", "gharchive_dev",
-						"--ssl-ca", "/etc/ssl/certs/ca-certificates.crt", "--ssl-verify-server-cert", "-p", passwd, "--execute", sql, "--csv").CombinedOutput()
-		if err != nil {
-			log.Fatalf("failed: %v", string(out))
-		}
+			start := time.Now()
+			log.Printf("\n\nstart time: %v, iter: %v, sqlFn: %v, user: %s\n", start, i, sqlFn, user)
 
-		msg := fmt.Sprintf("succeed: end time: %v, duration: %v\n\n", time.Now(), time.Since(start))
-		out = append([]byte(msg), out...)
-		err = os.WriteFile(logfile, out, 0666)
-		if err != nil {
-			log.Fatalf("got error when write output: %v", err)
-			return err
+			out, err := exec.Command("mycli", "-u", user, "-h", "gateway01.us-west-2.prod.aws.tidbcloud.com", "-P", "4000", "-D", "gharchive_dev",
+							"--ssl-ca", "/etc/ssl/certs/ca-certificates.crt", "--ssl-verify-server-cert", "-p", passwd, "--execute", sql, "--csv").CombinedOutput()
+			if err != nil {
+				log.Fatalf("failed: %v", string(out))
+			}
+
+			msg := fmt.Sprintf("succeed: end time: %v, duration: %v\n\n", time.Now(), time.Since(start))
+			out = append([]byte(msg), out...)
+			err = os.WriteFile(logfile, out, 0666)
+			if err != nil {
+				log.Fatalf("got error when write output: %v", err)
+				return err
+			}
 		}
 	}
 	return nil
@@ -72,6 +77,7 @@ func main() {
 	// prodCmdTemplate := "mycli -u '3EDFHZJX5iSzvfr.gh_debug' -h gateway01.us-west-2.prod.aws.tidbcloud.com -P 4000 -D test --ssl-ca=/etc/ssl/certs/ca-certificates.crt --ssl-verify-server-cert -pvsPK2GFU4HRAgWVBhoYu --execute %s --csv &> %s"
 	// shadowCmdTemplate := "mycli -u '3EDFHZJX5iSzvfr.shadow-ro.c7' -h gateway01.us-west-2.prod.aws.tidbcloud.com -P 4000 -D test --ssl-ca=/etc/ssl/certs/ca-certificates.crt --ssl-verify-server-cert -p1bed8f53a6d716e6a5b5fb1ee28afbd7 --execute %s --csv &> %s "
 
-	runSQL(fromDir, sqlFiles, resDir, ".shadow", "3EDFHZJX5iSzvfr.shadow-ro.c7", "gateway01.us-west-2.prod.aws.tidbcloud.com", "4000", "1bed8f53a6d716e6a5b5fb1ee28afbd7")
-	runSQL(fromDir, sqlFiles, resDir, ".prod", "3EDFHZJX5iSzvfr.gh_debug", "gateway01.us-west-2.prod.aws.tidbcloud.com", "4000", "vsPK2GFU4HRAgWVBhoYu")
+	// runSQL(fromDir, sqlFiles, resDir, ".shadow", "3EDFHZJX5iSzvfr.shadow-ro.c7", "gateway01.us-west-2.prod.aws.tidbcloud.com", "4000", "1bed8f53a6d716e6a5b5fb1ee28afbd7")
+	// runSQL(fromDir, sqlFiles, resDir, ".prod", "3EDFHZJX5iSzvfr.gh_debug", "gateway01.us-west-2.prod.aws.tidbcloud.com", "4000", "vsPK2GFU4HRAgWVBhoYu")
+	runSQL(fromDir, sqlFiles, resDir, []string{".shadow", ".prod"}, []string{"3EDFHZJX5iSzvfr.shadow-ro.c7", "3EDFHZJX5iSzvfr.gh_debug"}, []string{"1bed8f53a6d716e6a5b5fb1ee28afbd7", "vsPK2GFU4HRAgWVBhoYu"})
 }

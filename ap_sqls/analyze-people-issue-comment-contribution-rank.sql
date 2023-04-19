@@ -24,7 +24,7 @@ WITH issue_contribution_last_month AS (
     SELECT COALESCE(SUM(comments), 0) AS total FROM issue_contribution_last_month
 )
 SELECT
-    ROW_NUMBER() OVER (ORDER BY lm.comments DESC) AS row_num,
+    ROW_NUMBER() OVER (ORDER BY lm.comments DESC, lm.actor_login) AS row_num,
     lm.actor_login,
     lm.comments AS 'last_month_events',
     COALESCE(l2m.comments, 0) AS 'last_2nd_month_events',

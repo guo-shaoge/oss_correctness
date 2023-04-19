@@ -36,7 +36,7 @@ WITH former_contributors AS (
     ORDER BY events DESC
 )
 SELECT
-    ROW_NUMBER() OVER (ORDER BY lm.events DESC) AS row_num,
+    ROW_NUMBER() OVER (ORDER BY lm.events DESC, lm.create_at) AS row_num,
     lm.creator_user_login AS actor_login,
     lm.events AS 'last_month_events',
     COALESCE(l2m.events, 0) AS 'last_2nd_month_events',
