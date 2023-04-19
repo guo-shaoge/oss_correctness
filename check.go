@@ -1,77 +1,85 @@
 package main
 
 import (
-	"os"
-	"time"
+	"strings"
 	"fmt"
-	"io/ioutil"
-	"os/exec"
-	"path"
+	"os"
 	"path/filepath"
+	"bufio"
 	"log"
+	"io/ioutil"
+	"path"
 )
 
-func runSQL(fromDir string, sqlFiles []string, resDir string, resFnSuffix string,
-	user, host, port, passwd string) error {
-	for i, sqlFn := range sqlFiles {
-		sql := fmt.Sprintf("source %s;", path.Join(fromDir, sqlFn))
-		logfile := path.Join(resDir, sqlFn + ".result" + resFnSuffix)
-
-		start := time.Now()
-		log.Printf("\n\nstart time: %v, iter: %v, sqlFn: %v\n", start, i, sqlFn)
-
-		out, err := exec.Command("mycli", "-u", user, "-h", host, "-P", port, "-D", "gharchive_dev",
-	"--ssl-ca", "/etc/ssl/certs/ca-certificates.crt", "--ssl-verify-server-cert", "-p", passwd, "--execute", sql, "--csv").CombinedOutput()
-		if err != nil {
-			log.Fatalf("failed: %v", string(out))
-		}
-
-		msg := fmt.Sprintf("succeed: end time: %v, duration: %v\n\n", time.Now(), time.Since(start))
-		out = append([]byte(msg), out...)
-		err = os.WriteFile(logfile, out, 0666)
-		if err != nil {
-			log.Fatalf("got error when write output: %v", err)
-			return err
-		}
-	}
-	return nil
-}
-
 func main() {
-	if len(os.Args) != 3 {
-		log.Fatalf("usage: %s sql_dir res_dir", os.Args[0])
+	// resDir := "./result"
+	if len(os.Args) != 2 {
+		log.Fatalf("usage: %s resDir", os.Args[0])
 	}
-	fromDir, err := filepath.Abs(os.Args[1])
+	resDir := os.Args[1]
+
+	fileInfos, err := ioutil.ReadDir(resDir)
 	if err != nil {
 		panic(err)
 	}
-	targetDir, err := filepath.Abs(os.Args[2])
-	if err != nil {
-		panic(err)
-	}
 
-	const timeLayout = "2006_01_02_15_04_05"
-	resDir := path.Join(targetDir, time.Now().Format(timeLayout))
-	if err := os.Mkdir(resDir, 0755); err != nil {
-		panic(err)
-	}
+	const shadowFnSuffix = ".shadow"
+	const prodFnSuffix = ".prod"
 
-	files, err := ioutil.ReadDir(fromDir)
-    if err != nil {
-        log.Fatal(err)
-    }
-
-	var sqlFiles []string
-    for _, file := range files {
-		if !file.IsDir() {
-			sqlFiles = append(sqlFiles, file.Name())
+	comparedSQL := make(map[string]bool)
+	var fnCnt int
+	for _, fileInfo := range fileInfos {
+		if fileInfo.IsDir() {
+			log.Printf("got %s, which is not result file", fileInfo)
+			continue
 		}
-    }
 
+		fnBase := fileInfo.Name()
+		fnExt := filepath.Ext(fnBase)
+		fnNoExt := strings.TrimSuffix(fnBase, fnExt)
+		// Already compared.
+		if _, ok := comparedSQL[fnNoExt]; ok {
+			continue
+		}
+		comparedSQL[fnNoExt] = true
 
-	// prodCmdTemplate := "mycli -u '3EDFHZJX5iSzvfr.gh_debug' -h gateway01.us-west-2.prod.aws.tidbcloud.com -P 4000 -D test --ssl-ca=/etc/ssl/certs/ca-certificates.crt --ssl-verify-server-cert -pvsPK2GFU4HRAgWVBhoYu --execute %s --csv &> %s"
-	// shadowCmdTemplate := "mycli -u '3EDFHZJX5iSzvfr.shadow-ro.c7' -h gateway01.us-west-2.prod.aws.tidbcloud.com -P 4000 -D test --ssl-ca=/etc/ssl/certs/ca-certificates.crt --ssl-verify-server-cert -p1bed8f53a6d716e6a5b5fb1ee28afbd7 --execute %s --csv &> %s "
+		shadowResFilePath := path.Join(resDir, fnNoExt + shadowFnSuffix)
+		shadowFile, err := os.Open(shadowResFilePath)
+		if err != nil {
+			panic(err)
+		}
+		prodResFilePath := path.Join(resDir, fnNoExt + prodFnSuffix)
+		prodFile, err := os.Open(prodResFilePath)
+		if err != nil {
+			panic(err)
+		}
+		var shadowLines []string
+		var prodLines []string
+		scanner := bufio.NewScanner(shadowFile)
+		for scanner.Scan() {
+			shadowLines = append(shadowLines, scanner.Text())
+		}
+		scanner = bufio.NewScanner(prodFile)
+		for scanner.Scan() {
+			prodLines = append(prodLines, scanner.Text())
+		}
 
-	runSQL(fromDir, sqlFiles, resDir, ".prod", "3EDFHZJX5iSzvfr.gh_debug", "gateway01.us-west-2.prod.aws.tidbcloud.com", "4000", "vsPK2GFU4HRAgWVBhoYu")
-	runSQL(fromDir, sqlFiles, resDir, ".shadow", "3EDFHZJX5iSzvfr.shadow-ro.c7", "gateway01.us-west-2.prod.aws.tidbcloud.com", "4000", "1bed8f53a6d716e6a5b5fb1ee28afbd7")
+		fnCnt++
+		if len(shadowLines) != len(prodLines) {
+			msg := fmt.Sprintf("comparing %s and %s, len is: %v vs %v\n", shadowResFilePath, prodResFilePath, len(shadowResFilePath), len(prodLines))
+			panic(msg)
+		}
+		// ignore first line
+		same := true
+		for i := 1; i < len(shadowLines); i++ {
+			if shadowLines[i] != prodLines[i] {
+				same = false
+				// fmt.Printf("result not same %s and %s, line %d, %s vs %s\n", shadowResFilePath, prodResFilePath, i, shadowLines[i], prodLines[i])
+				break
+			}
+		}
+		if !same {
+			fmt.Printf("vimdiff %s %s\n", fnNoExt + prodFnSuffix, fnNoExt + shadowFnSuffix)
+		}
+	}
 }
