@@ -1,6 +1,8 @@
 package main
 
 import (
+	"sort"
+	"time"
 	"strings"
 	"fmt"
 	"os"
@@ -10,6 +12,13 @@ import (
 	"io/ioutil"
 	"path"
 )
+
+type S struct {
+	sql string
+	shadowDura time.Duration
+	prodDura time.Duration
+	rate float64
+}
 
 func main() {
 	// resDir := "./result"
@@ -28,7 +37,7 @@ func main() {
 
 	comparedSQL := make(map[string]bool)
 	var fnCnt int
-	duras := make(map[string][]string)
+	var reports []S
 	for _, fileInfo := range fileInfos {
 		if fileInfo.IsDir() {
 			log.Printf("got %s, which is not result file", fileInfo)
@@ -72,7 +81,14 @@ func main() {
 		}
 		// ignore first line
 		same := true
-		duras[fnNoExt] = []string{getDuration(shadowLines[0]), getDuration(prodLines[0])}
+		// duras[fnNoExt] = []string{getDuration(shadowLines[0]), getDuration(prodLines[0])}
+		report := S {
+			sql: fnNoExt,
+			shadowDura: getDuration(shadowLines[0]),
+			prodDura: getDuration(prodLines[0]),
+		}
+		report.rate = report.shadowDura.Seconds()/report.prodDura.Seconds()
+		reports = append(reports, report)
 		for i := 1; i < len(shadowLines); i++ {
 			if shadowLines[i] != prodLines[i] {
 				same = false
@@ -85,15 +101,23 @@ func main() {
 		}
 	}
 
+	sort.Slice(reports, func(i, j int) bool {
+		return reports[i].rate > reports[j].rate
+	})
 	fmt.Println()
 	fmt.Println()
-	fmt.Printf("| %-70s | %-20v | %-20v \n", "sql fn", "shadow", "prod")
-	for k, v := range duras {
-		fmt.Printf("| %-70s | %-20v | %-20v |\n", k, v[0], v[1])
+	fmt.Printf("| %-70s | %-20v | %-20v | %-20v(order by) |\n", "sql fn", "shadow", "prod", "shadow/prod")
+	for _, s := range reports {
+		fmt.Printf("| %-70s | %-20v | %-20v | %-20v |\n", s.sql, s.shadowDura, s.prodDura, s.rate)
 	}
 }
 
-func getDuration(line string) string {
+func getDuration(line string) time.Duration {
 	s := strings.Split(line, " ")
-	return s[len(s)-1]
+	duraStr := s[len(s)-1]
+	dura, err := time.ParseDuration(duraStr)
+	if err != nil {
+		panic(err)
+	}
+	return dura
 }
