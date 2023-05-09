@@ -1,0 +1,5 @@
+# run ap workload then record result to result/Y_M_D_H_M_S
+./run ./ap_sqls/ ./result
+
+# check result and compare speed
+./check ./result/2023_04_19_14_07_53
