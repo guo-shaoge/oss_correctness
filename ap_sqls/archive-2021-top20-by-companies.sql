@@ -18,5 +18,5 @@ WHERE
   AND gu.organization != ''
   AND gu.organization != 'none'
 GROUP BY 1
-ORDER BY 2 DESC
+ORDER BY 2 DESC, 1
 LIMIT 20

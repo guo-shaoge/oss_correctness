@@ -14,7 +14,7 @@ WITH bots_with_first_seen AS (
         bots_with_first_seen AS bwfs
     ORDER BY event_year
 )
-SELECT ANY_VALUE(cnt) AS bots_total, event_year
+SELECT Max(cnt) AS bots_total, event_year
 FROM acc
 GROUP BY event_year
 ORDER BY event_year

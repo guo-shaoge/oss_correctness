@@ -4,4 +4,4 @@ WHERE
     type = 'PullRequestEvent'
     AND event_year = YEAR(NOW())
 GROUP BY event_day
-ORDER BY event_day;
+ORDER BY event_day, events

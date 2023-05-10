@@ -14,5 +14,5 @@ GROUP BY (
    ( UNIX_TIMESTAMP(created_at) - UNIX_TIMESTAMP(UTC_TIMESTAMP - INTERVAL 5 MINUTE - INTERVAL UNIX_TIMESTAMP(UTC_TIMESTAMP - INTERVAL 5 MINUTE) % 5 SECOND) ) % 
    5
 )
-ORDER BY latest_timestamp
+ORDER BY latest_timestamp, cnt, latest_created_at
 ;

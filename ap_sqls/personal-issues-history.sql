@@ -31,3 +31,4 @@ SELECT
 FROM event_months m
 LEFT JOIN issues i ON m.event_month = i.event_month
 LEFT JOIN issue_comments ic ON m.event_month = ic.event_month
+ORDER BY 1, 2, 3

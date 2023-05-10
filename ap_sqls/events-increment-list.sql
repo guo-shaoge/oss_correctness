@@ -12,5 +12,5 @@ WHERE
         'WatchEvent', 'ForkEvent', 'IssuesEvent', 'PullRequestEvent', 'PushEvent', 'CreateEvent', 'ReleaseEvent', 
         'PullRequestReviewCommentEvent', 'PullRequestReviewEvent', 'IssueCommentEvent'
     )
-ORDER BY created_at DESC
+ORDER BY created_at DESC, id, type, action, actor_id, repo_id, repo_name, number, pr_merged, created_at
 LIMIT 50;

@@ -16,4 +16,4 @@ from
     prs
 where actor_login not like '%bot%'
 group by 1, 2
-order by 1, 3 desc
+order by 1, 3 desc, 2

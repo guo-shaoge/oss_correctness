@@ -47,7 +47,7 @@ WITH prs AS (
         AND actor_login NOT LIKE '%bot' AND actor_login NOT LIKE '%[bot]' AND actor_login NOT IN (SELECT login FROM blacklist_users bu)
     GROUP BY actor_login
 )
-SELECT actor_login, events
+SELECT actor_login, max(events) as max_events
 FROM (
     SELECT * FROM prs
     UNION
@@ -58,5 +58,5 @@ FROM (
     SELECT * FROM pushes
 )
 GROUP BY actor_login
-ORDER BY events DESC
+ORDER BY max_events DESC
 LIMIT 5

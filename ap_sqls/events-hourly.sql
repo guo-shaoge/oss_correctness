@@ -5,5 +5,5 @@ FROM github_events AS github_events
 WHERE created_at < DATE_FORMAT(UTC_TIMESTAMP - INTERVAL 1 HOUR, '%Y-%m-%d %H:00:00')
   AND created_at >= DATE_FORMAT(UTC_TIMESTAMP - INTERVAL 2 HOUR, '%Y-%m-%d %H:00:00')
 GROUP BY github_events.repo_id
-ORDER BY events DESC
+ORDER BY events DESC, repo_name
 LIMIT 10;

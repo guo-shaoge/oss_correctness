@@ -1,3 +1,4 @@
+set @@collation_connection = 'utf8_bin';
 SELECT company_name, stargazers
 FROM (
     SELECT
@@ -13,5 +14,5 @@ FROM (
 WHERE
     LENGTH(company_name) != 0
     AND company_name NOT IN ('-', '--- click here ---', 'none', 'no', 'home', 'n/a', 'unknown', 'null')
-ORDER BY stargazers DESC
+ORDER BY stargazers DESC, 1
 LIMIT 9999999999;

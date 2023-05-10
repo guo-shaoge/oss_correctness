@@ -1,5 +1,5 @@
 SELECT 
-    actor_id, ANY_VALUE(actor_login) AS actor_login, COUNT(*) AS contributions
+    actor_id, MIN(actor_login) AS actor_login, COUNT(*) AS contributions
 FROM github_events ge
 WHERE
     type IN ('PullRequestEvent', 'IssuesEvent', 'PullRequestReviewEvent', 'PushEvent')
@@ -11,5 +11,5 @@ WHERE
         (type = 'PushEvent')
     )
 GROUP BY actor_id
-ORDER BY contributions DESC
+ORDER BY contributions DESC, 1, 2
 LIMIT 50

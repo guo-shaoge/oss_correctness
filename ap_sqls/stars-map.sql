@@ -20,5 +20,5 @@ SELECT
     country_or_area,
     cnt AS count,
     cnt / summary.total AS percentage
-FROM group_by_area, summary
+FROM group_by_area, summary order by 1, 2, 3
 ;

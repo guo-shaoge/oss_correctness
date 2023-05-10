@@ -1,3 +1,4 @@
+set @@collation_connection='utf8_bin';
 select
     company_name
 from (
