@@ -1,3 +1,4 @@
+set @@tidb_isolation_read_engines="tiflash";
 SELECT 
     actor_id, MIN(actor_login) AS actor_login, COUNT(*) AS contributions
 FROM github_events ge

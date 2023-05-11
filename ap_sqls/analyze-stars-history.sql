@@ -1,3 +1,4 @@
+set @@tidb_isolation_read_engines="tiflash";
 SELECT
     event_month, repo_id, total
 FROM (

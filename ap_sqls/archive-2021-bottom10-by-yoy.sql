@@ -1,3 +1,4 @@
+set @@tidb_isolation_read_engines="tiflash";
 SELECT
     db.name,
     SUM(event_year = 2020)                                    AS stars2020,

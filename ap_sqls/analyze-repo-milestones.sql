@@ -1,3 +1,4 @@
+set @@tidb_isolation_read_engines="tiflash";
 SELECT
     srm.id AS milestone_id,
     milestone_type_id,

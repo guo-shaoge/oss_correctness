@@ -1,3 +1,4 @@
+set @@tidb_isolation_read_engines="tiflash";
 WITH issue_creator_companies AS (
     SELECT
         TRIM(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(u.organization, ',', ''), '-', ''), '@', ''), 'www.', ''), 'inc', ''), '.com', ''), '.cn', ''), '.', '')) AS company_name,

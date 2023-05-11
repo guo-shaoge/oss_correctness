@@ -1,3 +1,4 @@
+set @@tidb_isolation_read_engines="tiflash";
 SELECT
     actor_login,
     COUNT(*) AS pr_count

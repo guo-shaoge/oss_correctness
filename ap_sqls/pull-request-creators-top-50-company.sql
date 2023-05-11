@@ -1,3 +1,4 @@
+set @@tidb_isolation_read_engines="tiflash";
 SELECT company_name, code_contributors
 FROM (
     SELECT

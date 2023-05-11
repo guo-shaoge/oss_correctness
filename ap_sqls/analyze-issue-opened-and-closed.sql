@@ -1,3 +1,4 @@
+set @@tidb_isolation_read_engines="tiflash";
 with issue_closed as (
     select
         date_format(created_at, '%Y-%m-01') as event_month, count(number) as closed

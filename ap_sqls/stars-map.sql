@@ -1,3 +1,4 @@
+set @@tidb_isolation_read_engines="tiflash";
 WITH group_by_area AS (
     SELECT
         UPPER(gu.country_code) AS country_or_area,

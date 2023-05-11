@@ -1,3 +1,4 @@
+set @@tidb_isolation_read_engines="tiflash";
 WITH issues AS (
     SELECT
         41986369 AS repo_id, IFNULL(COUNT(DISTINCT number), 0) AS total

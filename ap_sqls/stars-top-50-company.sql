@@ -1,3 +1,4 @@
+set @@tidb_isolation_read_engines="tiflash";
 set @@collation_connection = 'utf8_bin';
 SELECT company_name, stargazers
 FROM (

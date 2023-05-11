@@ -1,3 +1,4 @@
+set @@tidb_isolation_read_engines="tiflash";
 WITH pull_requests AS (
     SELECT
         41986369 AS repo_id,

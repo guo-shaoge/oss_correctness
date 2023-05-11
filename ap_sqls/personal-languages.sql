@@ -1,3 +1,4 @@
+set @@tidb_isolation_read_engines="tiflash";
 WITH prs_with_language AS (
     SELECT
         gr.primary_language AS language, COUNT(1) AS cnt
@@ -18,4 +19,4 @@ SELECT
     cnt AS prs,
     cnt / s.total AS percentage
 FROM prs_with_language, s
-ORDER BY prs DESC
+ORDER BY prs DESC, 1, 3

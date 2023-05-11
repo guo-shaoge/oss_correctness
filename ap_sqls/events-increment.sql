@@ -1,3 +1,4 @@
+set @@tidb_isolation_read_engines="tiflash";
 SELECT
     COUNT(1) AS cnt,
     MAX(created_at) AS latest_created_at,

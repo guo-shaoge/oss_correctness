@@ -1,3 +1,4 @@
+set @@tidb_isolation_read_engines="tiflash";
 WITH repo_stars AS (
     SELECT
         repo_id,

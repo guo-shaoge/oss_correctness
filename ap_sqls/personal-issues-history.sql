@@ -1,3 +1,4 @@
+set @@tidb_isolation_read_engines="tiflash";
 WITH issues AS (
     SELECT
         DATE_FORMAT(created_at, '%Y-%m-01') AS event_month,

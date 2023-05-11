@@ -1,3 +1,4 @@
+set @@tidb_isolation_read_engines="tiflash";
 WITH pr_24h AS (
 	SELECT
                 /*+ MERGE() */

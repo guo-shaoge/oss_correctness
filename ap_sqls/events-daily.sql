@@ -1,3 +1,4 @@
+set @@tidb_isolation_read_engines="tiflash";
 SELECT event_day, COUNT(*) AS events
 FROM github_events ge
 WHERE

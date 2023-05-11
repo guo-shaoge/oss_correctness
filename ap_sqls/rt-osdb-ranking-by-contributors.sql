@@ -1,3 +1,4 @@
+set @@tidb_isolation_read_engines="tiflash";
 with prs as (
     select
         pr_or_issue_id, db.group_name as repo_group_name, actor_login

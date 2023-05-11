@@ -1,3 +1,4 @@
+set @@tidb_isolation_read_engines="tiflash";
 SELECT
     db.group_name  AS repo_group_name,
     COUNT(distinct pr_or_issue_id) AS num

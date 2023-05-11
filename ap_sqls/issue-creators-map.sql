@@ -1,3 +1,4 @@
+set @@tidb_isolation_read_engines="tiflash";
 WITH group_by_area AS (
     SELECT
         gu.country_code AS country_or_area,
@@ -22,4 +23,5 @@ SELECT
     cnt AS count,
     cnt / summary.total AS percentage
 FROM group_by_area, summary
+ORDER BY 1, 2, 3
 ;

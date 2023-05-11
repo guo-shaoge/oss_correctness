@@ -1,3 +1,4 @@
+set @@tidb_isolation_read_engines="tiflash";
 WITH RECURSIVE seq(idx, current_period_day, last_period_day) AS (
       SELECT
         1 AS idx,

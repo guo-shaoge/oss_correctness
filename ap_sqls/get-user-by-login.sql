@@ -1,3 +1,4 @@
+set @@tidb_isolation_read_engines="tiflash";
 SELECT
     actor_id AS id, 'Mini256' AS login
 FROM github_events

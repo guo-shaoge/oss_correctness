@@ -1,3 +1,4 @@
+set @@tidb_isolation_read_engines="tiflash";
 with issue_with_first_responed_at as (
     select
         pr_or_issue_id, any_value(db.group_name) as repo_group_name, min(created_at) as first_responed_at

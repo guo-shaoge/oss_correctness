@@ -1,3 +1,4 @@
+set @@tidb_isolation_read_engines="tiflash";
 with issue_with_closed_at as (
     select
         number, DATE_FORMAT(created_at, '%Y-%m-01') AS event_month, created_at as closed_at

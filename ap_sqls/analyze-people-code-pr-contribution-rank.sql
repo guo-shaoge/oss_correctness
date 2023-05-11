@@ -1,3 +1,4 @@
+set @@tidb_isolation_read_engines="tiflash";
 WITH former_contributors AS (
     SELECT DISTINCT creator_user_login
     FROM github_events ge

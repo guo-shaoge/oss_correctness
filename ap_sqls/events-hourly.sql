@@ -1,3 +1,4 @@
+set @@tidb_isolation_read_engines="tiflash";
 SELECT ANY_VALUE(repo_name)    AS repo_name,
        COUNT(github_events.id) AS events
 FROM github_events AS github_events

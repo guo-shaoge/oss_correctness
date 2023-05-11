@@ -1,3 +1,4 @@
+set @@tidb_isolation_read_engines="tiflash";
 WITH prs AS (
     SELECT
         actor_login, COUNT(*) AS events

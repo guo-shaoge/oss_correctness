@@ -1,3 +1,4 @@
+set @@tidb_isolation_read_engines="tiflash";
 SELECT
     ANY_VALUE(repo_subset.name) AS repo_name,
     COUNT(*)                    AS events_count

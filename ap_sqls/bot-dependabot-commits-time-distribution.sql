@@ -1,3 +1,4 @@
+set @@tidb_isolation_read_engines="tiflash";
 SELECT
     dayofweek(created_at) - 1 as dayofweek,
     hour(created_at) as hour,

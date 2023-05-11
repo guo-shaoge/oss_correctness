@@ -1,3 +1,4 @@
+set @@tidb_isolation_read_engines="tiflash";
 with issue_with_first_responed_at as (
     select
         number, min(date_format(created_at, '%Y-%m-01')) as event_month, min(created_at) as first_responed_at

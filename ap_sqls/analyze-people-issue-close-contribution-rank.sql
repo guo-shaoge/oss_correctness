@@ -1,3 +1,4 @@
+set @@tidb_isolation_read_engines="tiflash";
 WITH issue_contribution_last_month AS (
     SELECT actor_id, ANY_VALUE(actor_login) AS actor_login, COUNT(*) AS closes
     FROM github_events ge

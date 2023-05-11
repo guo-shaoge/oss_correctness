@@ -1,3 +1,4 @@
+set @@tidb_isolation_read_engines="tiflash";
 WITH bots_with_first_seen AS (
     SELECT
         actor_login, MIN(event_year) AS first_seen_at

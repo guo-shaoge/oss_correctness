@@ -1,3 +1,4 @@
+set @@tidb_isolation_read_engines="tiflash";
 SELECT
     country_code,
     COUNT(DISTINCT actor_id) AS users_count

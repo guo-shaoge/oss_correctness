@@ -1,3 +1,4 @@
+set @@tidb_isolation_read_engines="tiflash";
 select
     count(distinct actor_login)
 from (

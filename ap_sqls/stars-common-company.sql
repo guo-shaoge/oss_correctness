@@ -1,4 +1,4 @@
-set @@collation_connection='utf8_bin';
+set @@tidb_isolation_read_engines="tiflash";
 select
     company_name
 from (
@@ -16,5 +16,5 @@ where
     and company_name not in ('-', 'none', 'no', 'home', 'n/a', 'null', 'unknown')
 group by 1
 having COUNT(distinct repo_id) > 1
-order by SUM(stargazers) desc
+order by SUM(stargazers) desc, company_name, repo_id
 limit 50;

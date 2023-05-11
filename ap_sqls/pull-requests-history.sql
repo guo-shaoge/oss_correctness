@@ -1,3 +1,4 @@
+set @@tidb_isolation_read_engines="tiflash";
 WITH prs_with_latest_repo_name AS (
     SELECT
         event_month,

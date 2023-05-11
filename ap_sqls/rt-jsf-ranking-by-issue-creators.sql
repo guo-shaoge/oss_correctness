@@ -1,3 +1,4 @@
+set @@tidb_isolation_read_engines="tiflash";
 SELECT
     ci.repo_name  AS repo_name,
     COUNT(distinct actor_login) AS num

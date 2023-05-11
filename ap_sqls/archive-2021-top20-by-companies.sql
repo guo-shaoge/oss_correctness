@@ -1,3 +1,4 @@
+set @@tidb_isolation_read_engines="tiflash";
 SELECT
     TRIM(LOWER(REPLACE(gu.organization, '@', ''))) AS company,
     COUNT(DISTINCT actor_id)                 AS users_count

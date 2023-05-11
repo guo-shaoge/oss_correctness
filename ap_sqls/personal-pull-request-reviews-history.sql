@@ -1,3 +1,4 @@
+set @@tidb_isolation_read_engines="tiflash";
 WITH reviews AS (
     SELECT
         DATE_FORMAT(created_at, '%Y-%m-01') AS event_month,
@@ -27,3 +28,4 @@ SELECT
     IFNULL(rc.cnt, 0) AS review_comments
 FROM reviews r
 JOIN review_comments rc ON r.event_month = rc.event_month
+ORDER BY 1, 2, 3

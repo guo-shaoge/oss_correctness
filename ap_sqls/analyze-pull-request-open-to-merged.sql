@@ -1,3 +1,4 @@
+set @@tidb_isolation_read_engines="tiflash";
 with pr_with_merged_at as (
     select
         number, date_format(created_at, '%Y-%m-01') as event_month, created_at as merged_at

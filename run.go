@@ -14,6 +14,19 @@ import (
 func runSQL(fromDir string, sqlFiles []string, resDir string, resFnSuffixs []string,
 	users, passwds []string) error {
 	for i, sqlFn := range sqlFiles {
+		if sqlFn == "issue-creators-top-50-company.sql" ||
+		   sqlFn == "issue-creators-top-50-company.sql" ||
+		   sqlFn == "stars-top-50-company.sql" ||
+		   sqlFn == "analyze-issue-creators-company.sql" ||
+		   sqlFn == "analyze-pull-request-creators-company.sql" ||
+		   sqlFn == "pull-request-creators-top-50-company.sql" {
+			// Because this sql use index
+			continue
+		}
+		if len(sqlFn) >= 19 && sqlFn[:19] == "trending-repos-past" {
+			// Because trending-repos-past will give error(tidb related problem)
+			continue
+		}
 		sql := fmt.Sprintf("source %s;", path.Join(fromDir, sqlFn))
 
 		for j := 0; j < 2; j++ {

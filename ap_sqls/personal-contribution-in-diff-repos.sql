@@ -1,3 +1,4 @@
+set @@tidb_isolation_read_engines="tiflash";
 SELECT
     repo_id,
     ANY_VALUE(repo_name) AS repo_name,

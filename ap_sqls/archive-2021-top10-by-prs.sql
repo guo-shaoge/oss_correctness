@@ -1,3 +1,4 @@
+set @@tidb_isolation_read_engines="tiflash";
 SELECT
     db_repos.name AS repo_name,
     COUNT(*)      AS num

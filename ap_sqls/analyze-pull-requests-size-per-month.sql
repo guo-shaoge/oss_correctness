@@ -1,3 +1,4 @@
+set @@tidb_isolation_read_engines="tiflash";
 SELECT event_month, xs, s, m, l, xl, all_size
 FROM (
     SELECT

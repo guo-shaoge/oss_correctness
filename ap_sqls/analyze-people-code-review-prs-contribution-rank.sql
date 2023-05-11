@@ -1,3 +1,4 @@
+set @@tidb_isolation_read_engines="tiflash";
 WITH review_contribution_last_month AS (
     SELECT
         actor_id,

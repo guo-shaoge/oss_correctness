@@ -1,3 +1,4 @@
+set @@tidb_isolation_read_engines="tiflash";
 WITH tdiff AS (
     SELECT
         group_name AS repo_group_name,
