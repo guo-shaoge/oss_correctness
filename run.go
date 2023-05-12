@@ -1,6 +1,7 @@
 package main
 
 import (
+	"strings"
 	"os"
 	"time"
 	"fmt"
@@ -37,8 +38,19 @@ func runSQL(fromDir string, sqlFiles []string, resDir string, resFnSuffixs []str
 			start := time.Now()
 			log.Printf("\n\nstart time: %v, iter: %v, sqlFn: %v, user: %s\n", start, i, sqlFn, user)
 
-			out, err := exec.Command("mycli", "-u", user, "-h", "gateway01.us-west-2.prod.aws.tidbcloud.com", "-P", "4000", "-D", "gharchive_dev",
-							"--ssl-ca", "/etc/ssl/certs/ca-certificates.crt", "--ssl-verify-server-cert", "-p", passwd, "--execute", sql, "--csv").CombinedOutput()
+			var out []byte
+			var err error
+			if strings.Contains(user, "shadow") {
+				// shadow, we run 3 times to make cache warm
+				for x := 0; x < 3; x++ {
+					log.Printf("shadow query, run %d times; ", x)
+					out, err = exec.Command("mycli", "-u", user, "-h", "gateway01.us-west-2.prod.aws.tidbcloud.com", "-P", "4000", "-D", "gharchive_dev",
+									"--ssl-ca", "/etc/ssl/certs/ca-certificates.crt", "--ssl-verify-server-cert", "-p", passwd, "--execute", sql, "--csv").CombinedOutput()
+				}
+			} else {
+				out, err = exec.Command("mycli", "-u", user, "-h", "gateway01.us-west-2.prod.aws.tidbcloud.com", "-P", "4000", "-D", "gharchive_dev",
+								"--ssl-ca", "/etc/ssl/certs/ca-certificates.crt", "--ssl-verify-server-cert", "-p", passwd, "--execute", sql, "--csv").CombinedOutput()
+			}
 			if err != nil {
 				log.Fatalf("failed: %v", string(out))
 			}
